@@ -59,7 +59,7 @@ def login(request):
         params['hd'] = APPS_DOMAIN
 
     request.session['googleauth_csrf'] = csrf_token
-    request.session['next'] = request.META.get('HTTP_REFERER', None)
+    request.session['next'] = request.META.get('HTTP_REFERER', request.GET.get("next", None))
 
     return HttpResponseRedirect("%s?%s" % (GOOGLE_AUTH_ENDPOINT, urlencode(params)))
 
