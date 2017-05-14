@@ -4,7 +4,7 @@ long_description = open('README.rst').read()
 
 setup(
     name="django-googleauth",
-    version='2.1',
+    version='2.2',
     packages=["googleauth"],
     description="OAuth 2.0 authentication for Google and Google Apps accounts",
     url="https://github.com/jcarbaugh/django-googleauth",
