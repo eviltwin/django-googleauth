@@ -34,7 +34,7 @@ class GoogleAuthBackend(ModelBackend):
                 try:
                     grp = Group.objects.get(name=group)
                     user.groups.add(grp)
-                except:
+                except Group.DoesNotExist:
                     pass
 
             user.save()
