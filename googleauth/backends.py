@@ -19,17 +19,11 @@ class GoogleAuthBackend(ModelBackend):
             return None
 
         try:
-
             try:
-
                 user = User.objects.get(email=email)
-
             except User.MultipleObjectsReturned:
-
                 user = User.objects.get(username=username, email=email)
-
         except User.DoesNotExist:
-
             user = User.objects.create(username=username, email=email)
             user.first_name = attributes.get('first_name') or ''
             user.last_name = attributes.get('last_name') or ''
@@ -44,7 +38,6 @@ class GoogleAuthBackend(ModelBackend):
                     pass
 
             user.save()
-
         return user
 
     def get_user(self, user_id):
