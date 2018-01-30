@@ -3,11 +3,11 @@ from setuptools import setup
 long_description = open('README.rst').read()
 
 setup(
-    name="django-googleauth",
-    version='2.1',
+    name="django-googleauth-ng",
+    version='2.3',
     packages=["googleauth"],
     description="OAuth 2.0 authentication for Google and Google Apps accounts",
-    url="https://github.com/jcarbaugh/django-googleauth",
+    url="https://github.com/ojarva/django-googleauth",
     author="Jeremy Carbaugh",
     author_email="jcarbaugh@gmail.com",
     license='BSD',
