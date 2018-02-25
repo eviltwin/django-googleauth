@@ -39,6 +39,13 @@ def generate_redirect_uri():
     return '%s://%s%s' % (scheme, CALLBACK_DOMAIN, path)
 
 
+def generate_return_uri(request):
+    path = request.GET.get("next")
+    if not path:
+        return request.META.get('HTTP_REFERER', None)
+    scheme = 'https' if USE_HTTPS else 'http'
+    return '%s://%s%s' % (scheme, CALLBACK_DOMAIN, path)
+
 #
 # the views
 #
@@ -59,7 +66,7 @@ def login(request):
         params['hd'] = APPS_DOMAIN
 
     request.session['googleauth_csrf'] = csrf_token
-    request.session['next'] = request.META.get('HTTP_REFERER', None)
+    request.session['next'] = generate_return_uri()
 
     return HttpResponseRedirect("%s?%s" % (GOOGLE_AUTH_ENDPOINT, urlencode(params)))
 
