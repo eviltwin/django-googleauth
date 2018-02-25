@@ -7,7 +7,7 @@ except ImportError:
     from urllib.parse import urlencode
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.views import logout as django_logout
 from django.http import HttpResponse, HttpResponseRedirect
@@ -66,7 +66,7 @@ def login(request):
         params['hd'] = APPS_DOMAIN
 
     request.session['googleauth_csrf'] = csrf_token
-    request.session['next'] = generate_return_uri()
+    request.session['next'] = generate_return_uri(request)
 
     return HttpResponseRedirect("%s?%s" % (GOOGLE_AUTH_ENDPOINT, urlencode(params)))
 
