@@ -9,7 +9,7 @@ except ImportError:
 from django.conf import settings
 from django.urls import reverse
 from django.contrib import auth
-from django.contrib.auth.views import auth_login as django_logout
+from django.contrib.auth.views import auth_logout as django_logout
 from django.http import HttpResponse, HttpResponseRedirect
 
 GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
