@@ -19,10 +19,7 @@ class GoogleAuthBackend(ModelBackend):
             return None
         User = get_user_model()
         try:
-            try:
-                user = User.objects.get(email=email)
-            except User.MultipleObjectsReturned:
-                user = User.objects.get(username=username, email=email)
+            user = User.objects.get(username=username, email=email)
         except User.DoesNotExist:
             user = User.objects.create(username=username, email=email)
             user.first_name = attributes.get('first_name') or ''
