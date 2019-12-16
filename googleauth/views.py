@@ -89,7 +89,7 @@ def callback(request):
     resp = requests.post(GOOGLE_TOKEN_ENDPOINT, data=data)
 
     if resp.status_code != 200:
-        return HttpResponse('Invalid token response', status=401)
+        return HttpResponse(f'Invalid token response\n{resp.content}', status=401)
 
     tokens = resp.json()
     id_token = jwt.decode(tokens['id_token'], verify=False)
