@@ -29,6 +29,7 @@ GET_PROFILE = getattr(settings, 'GOOGLEAUTH_GET_PROFILE', True)
 
 CSRF_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
+
 def generate_csrf_token():
     return ''.join(random.choice(CSRF_CHARACTERS) for x in range(32))
 
@@ -49,6 +50,7 @@ def generate_return_uri(request):
 #
 # the views
 #
+
 
 def login(request):
 
@@ -93,15 +95,14 @@ def callback(request):
     id_token = jwt.decode(tokens['id_token'], verify=False)
 
     if (not id_token['email_verified']
-         or id_token['iss'] != 'accounts.google.com'
-         or id_token['aud'] != CLIENT_ID):
-            return HttpResponse('Forged response', status=401)
+        or id_token['iss'] != 'accounts.google.com'
+            or id_token['aud'] != CLIENT_ID):
+        return HttpResponse('Forged response', status=401)
 
     attributes = {
         'email': id_token.get('email'),
         'access_token': tokens['access_token'],
     }
-
 
     # get profile data
 
@@ -116,7 +117,6 @@ def callback(request):
 
             attributes['first_name'] = profile.get('given_name')
             attributes['last_name'] = profile.get('family_name')
-
 
     # authenticate user
 

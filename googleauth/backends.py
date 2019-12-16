@@ -1,6 +1,7 @@
 import requests
 from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.contrib.auth.backends import ModelBackend
 
 IS_STAFF = getattr(settings, 'GOOGLEAUTH_IS_STAFF', False)
@@ -17,7 +18,7 @@ class GoogleAuthBackend(ModelBackend):
 
         if APPS_DOMAIN and APPS_DOMAIN != domain:
             return None
-
+        User = get_user_model()
         try:
             try:
                 user = User.objects.get(email=email)
@@ -41,6 +42,7 @@ class GoogleAuthBackend(ModelBackend):
         return user
 
     def get_user(self, user_id):
+        User = get_user_model()
         try:
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
