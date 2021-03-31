@@ -93,7 +93,7 @@ def callback(request):
         return HttpResponse(f'Invalid token response\n{resp.content}', status=401)
 
     tokens = resp.json()
-    certs = request.get(GOOGLE_PEM_ENDPOINT)
+    certs = requests.get(GOOGLE_PEM_ENDPOINT)
     if certs.status_code != 200:
         return HttpResponse(f"Invalid certificate response\n{certs.content}", status=401)
     id_token = jwt.decode(tokens['id_token'], certs.json(), verify=False, algorithms=["RS256", ])
