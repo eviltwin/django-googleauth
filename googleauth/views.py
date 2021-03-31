@@ -17,6 +17,28 @@ GOOGLE_TOKEN_ENDPOINT = 'https://accounts.google.com/o/oauth2/token'
 GOOGLE_USERINFO_ENDPOINT = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect'
 GOOGLE_PEM_ENDPOINT = "https://www.googleapis.com/oauth2/v1/certs"
 
+GOOGLE_PEM_KEY = """-----BEGIN CERTIFICATE-----
+MIIDJjCCAg6gAwIBAgIINu+7rcZ6HqMwDQYJKoZIhvcNAQEFBQAwNjE0MDIGA1UE
+AxMrZmVkZXJhdGVkLXNpZ25vbi5zeXN0ZW0uZ3NlcnZpY2VhY2NvdW50LmNvbTAe
+Fw0yMTAzMjQwNDI5NTJaFw0yMTA0MDkxNjQ0NTJaMDYxNDAyBgNVBAMTK2ZlZGVy
+YXRlZC1zaWdub24uc3lzdGVtLmdzZXJ2aWNlYWNjb3VudC5jb20wggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQCbFbQkogqUS6qrv9x87r3IpV2SLB3jqGLa
+dGZ55jC//q8WOhZs+uC10qc9rPfsHtogPtZ4ExCwzqIXzq9Aiyr0Ab2DsPf6rEKX
+xgtId0busOfPwRkN0MSAeop9/H4wM96NsjGuWyrtrvNzhW/bvzbMCLdbX/H8ZpQi
+wNlYeEE60KelkS960HaULt9Iu0gN8+p6NiED2I24o2OyZwJDiQZvP7pZcoj5mO1Y
++Re4pcYO1lVkICxengba5zzJEvyVXHHx9wxhBDODq3LNdNulCG/yuNdW7olDOPeg
+Viu7YXqd+KdRnGbMQcGVVe5FdO7Nicofkekb99rbXYVLyO2N1g3FAgMBAAGjODA2
+MAwGA1UdEwEB/wQCMAAwDgYDVR0PAQH/BAQDAgeAMBYGA1UdJQEB/wQMMAoGCCsG
+AQUFBwMCMA0GCSqGSIb3DQEBBQUAA4IBAQCJxlwsDNBABkIIfK0JIglXfen6Trs4
+6nHpSAkmrd/VLe7/ocL1DJl3aW237S8YwwaASx23QxMKRlxDYOhrs3MtpYWnjlej
+veghdIcddBDAa4MJUstc7ilk9r6i4yIft3ewcsENKCXcvej4IkUzUlw8xH2KcQ67
+Y0u4YDMaHaZffl+PllxliMFvV1lDOqBN++/VV0npU3NXGxs08y5XmiaZbJ9prByN
+NCBW0AsHaJlUEwdq9eIowc1PGHs5Rr5pI3kBVg/QCj2pGRoLTefcaX52T+SXOXO/
+4164CYqh4DQjXO+T/sfQw0ZgZouyTLkSD/92kE8Cy18nxx27rMqlrn3o
+-----END CERTIFICATE-----
+"""
+
+
 USE_HTTPS = getattr(settings, 'GOOGLEAUTH_USE_HTTPS', True)
 CLIENT_ID = getattr(settings, 'GOOGLEAUTH_CLIENT_ID', None)
 CLIENT_SECRET = getattr(settings, 'GOOGLEAUTH_CLIENT_SECRET', None)
@@ -93,12 +115,9 @@ def callback(request):
         return HttpResponse(f'Invalid token response\n{resp.content}', status=401)
 
     tokens = resp.json()
-    certs = requests.get(GOOGLE_PEM_ENDPOINT)
-    if certs.status_code != 200:
-        return HttpResponse(f"Invalid certificate response\n{certs.content}", status=401)
-        
+
     id_token = jwt.decode(tokens['id_token'], 
-                          certs.json()['13e8d45a43cb2242154c7f4dafac2933fea20374'],
+                          GOOGLE_PEM_KEY,
                           verify=False, 
                           algorithms=["RS256", ])
 
