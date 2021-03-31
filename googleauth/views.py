@@ -92,7 +92,7 @@ def callback(request):
         return HttpResponse(f'Invalid token response\n{resp.content}', status=401)
 
     tokens = resp.json()
-    id_token = jwt.decode(tokens['id_token'], verify=False)
+    id_token = jwt.decode(tokens['id_token'], verify=False, algorithms=["RS256", "ES256", "HS256"])
 
     if (not id_token['email_verified']
         or id_token['iss'] != 'accounts.google.com'
