@@ -15,6 +15,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
 GOOGLE_TOKEN_ENDPOINT = 'https://accounts.google.com/o/oauth2/token'
 GOOGLE_USERINFO_ENDPOINT = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect'
+GOOGLE_PEM_ENDPOINT = "https://www.googleapis.com/oauth2/v1/certs"
 
 USE_HTTPS = getattr(settings, 'GOOGLEAUTH_USE_HTTPS', True)
 CLIENT_ID = getattr(settings, 'GOOGLEAUTH_CLIENT_ID', None)
@@ -92,7 +93,10 @@ def callback(request):
         return HttpResponse(f'Invalid token response\n{resp.content}', status=401)
 
     tokens = resp.json()
-    id_token = jwt.decode(tokens['id_token'], verify=False, algorithms=["RS256", ])
+    certs = request.get(GOOGLE_PEM_ENDPOINT)
+    if certs.status_code != 200:
+        return HttpResponse(f"Invalid certificate response\n{certs.content}", status=401)
+    id_token = jwt.decode(tokens['id_token'], certs.json(), verify=False, algorithms=["RS256", ])
 
     if (not id_token['email_verified']
         or id_token['iss'] != 'accounts.google.com'
