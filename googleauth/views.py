@@ -96,7 +96,11 @@ def callback(request):
     certs = requests.get(GOOGLE_PEM_ENDPOINT)
     if certs.status_code != 200:
         return HttpResponse(f"Invalid certificate response\n{certs.content}", status=401)
-    id_token = jwt.decode(tokens['id_token'], certs.json(), verify=False, algorithms=["RS256", ])
+        
+    id_token = jwt.decode(tokens['id_token'], 
+                          certs.json()['13e8d45a43cb2242154c7f4dafac2933fea20374'],
+                          verify=False, 
+                          algorithms=["RS256", ])
 
     if (not id_token['email_verified']
         or id_token['iss'] != 'accounts.google.com'
